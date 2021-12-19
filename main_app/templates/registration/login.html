@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block bar %}
+Авторизація
+{% endblock %}
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <h1><strong>Авторизація на сайті</strong></h1>
+            <p>{{ form }}</p>
+            <button type="submit" class="btn btn-outline-primary">Вхід</button>
+          <div class="btn btn-default">
+              <a href="{% url 'reset_password' %}" class="b1">Забули пароль?</a>
+          </div>
+        </div>
+
+    </div>
+    </div>
+</form>
+{% endblock content %}
