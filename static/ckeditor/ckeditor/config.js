@@ -8,3 +8,4 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
 };
+CKEDITOR.addCss('.cke_editable img { max-width: 100% !important; height: auto !important; }');

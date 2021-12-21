@@ -1,4 +1,4 @@
 project_restaurant/.env
 venv
 .idea
-*.pyc
+*.pyc 

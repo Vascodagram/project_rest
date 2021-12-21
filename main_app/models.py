@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.utils.html import TRAILING_PUNCTUATION_CHARS
+# from django.views.generic.list import T
 # Create your models here.
 
 
@@ -30,12 +32,11 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='comment_post', on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор коментаря", blank=True, null=True)
     create_data = models.DateTimeField(auto_now=True)
-    body = models.TextField(verbose_name='Текст коментаря', max_length=150)
+    body = models.TextField(verbose_name='Текст коментаря', max_length=450)
     status = models.BooleanField(verbose_name="Статус коментаря", default=False)
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def get_children(self):
-        print(self)
         return Comment.objects.filter(parent=self)
 
     class Meta:

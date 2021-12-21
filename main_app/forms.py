@@ -1,5 +1,5 @@
 from django.db.models import fields
-from django.forms import Textarea, PasswordInput
+from django.forms import Textarea, PasswordInput, widgets
 from django import forms
 from .models import Comment
 from django.contrib.auth.models import User
@@ -8,10 +8,10 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 class RegisterUserForm(forms.ModelForm):
-    """ форма ресистрации"""
+    """ форма регистрации"""
     confirm_password = forms.CharField(widget=forms.PasswordInput)
     password = forms.CharField(widget=forms.PasswordInput)
-    phone = forms.CharField(required=False)
+    # phone = forms.CharField(required=False)
     email = forms.EmailField()
 
     def __init__(self, *args, **kwargs):
@@ -19,7 +19,7 @@ class RegisterUserForm(forms.ModelForm):
         self.fields['username'].label = 'Логін'
         self.fields['password'].label = 'Пароль'
         self.fields['confirm_password'].label = 'Повторіть пароль'
-        self.fields['phone'].label = 'Телефон'
+        # self.fields['phone'].label = 'Телефон'
         self.fields['email'].label = 'Email'
         self.fields['first_name'].label = "Ім'я"
         self.fields['last_name'].label = 'Фамілія'
@@ -47,7 +47,10 @@ class RegisterUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'confirm_password', 'first_name', 'last_name', 'phone', 'email']
+        help_texts = {
+            'username': None
+        }
+        fields = ['username', 'password', 'confirm_password', 'first_name', 'last_name', 'email']
 
 
 class AuthUserForm(forms.ModelForm):
@@ -56,6 +59,9 @@ class AuthUserForm(forms.ModelForm):
 
     class Meta:
         model = User
+        help_texts = {
+            'username': None
+        }
         fields = ('username', 'password')
 
     def __init__(self, *args, **kwargs):
@@ -78,7 +84,7 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('body',)
-
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:

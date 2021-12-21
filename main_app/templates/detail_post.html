@@ -9,83 +9,77 @@
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
+                
                 <h1>{{detail_post.anons}}</h1>
+                <style>
+
+                    .div1{
+height: auto;
+max-width: 100%;
+width: auto;
+}
+               </style>
                 <p>{{detail_post.full_text|safe}}</p>
             </div>
-
         </div>
-        <hr>
+        <div class="container px-4 px-lg-5">
+            <div class="row d-flex justify-content-center">
+                <hr>
         <p>Коментарі: {{detail_post.comment_post.all.count}}</p>
         <hr>
-        {% if message %}
-        <div class="alert alert-success">
-            {% for m in messages %}
-            {{m}}
-            {% endfor %}
-            {% endif %}
-        </div>
-        <ul>
-            {% for item in detail_post.get_review %}
-            <div class="row gx-2 gx-lg-5 justify-content-center">
-                <div class="col-md-8 col-lg-8 col-xl-7">
-                    <li>
-                        Дата створення: {{ item.create_data }} <br>
-                        Автор: {{ item.user }} <br>
-                        <style type="text/css">.perenos {
-  border:0.0px solid #B0C4DE;
-  margin:0px;
-  padding:10px;
-  width:600px;
-  word-break:break-all;
-  }
-                        </style>
-                        <div class="perenos">
-                            <i>{{ item.body}}</i>
+                {% for item in detail_post.get_review %}
+                <div class="col-md-10">
+                    <div class="card p-1 mb-2">
+                        <div class="d-flex flex-column ms-2">
+                            <h5 class="mb-1 text-primary">Автор: {{ item.user }}</h5>
+                            <p class="fst-normal">Коментар: {{ item.body }}</p>
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-row"> <span class="text-muted fw-normal fs-10">{{ item.create_data}}</span></div>
+                                {% if request.user.is_authenticated %}
+                                <a href="#add_form" class="text-primary" onclick="js_rep('{{ item.user }}', '{{ item.id }}')">Відповісти</a>
+                                {% else %}
+                                {% endif %}
+                            </div>
+                            <hr>
                         </div>
-                        <a href="#add_form" onclick="js_rep('{{ item.user }}', '{{ item.id }}')">Відповісти</a>
-                        <hr>
                         {% for replay in item.get_children %}
-                        <div class="perenos">
-                        <p style="margin-left: 50px;">
-                            Дата створення: {{ replay.create_data }}<br>
-                            Автор: {{ replay.user }}<br>
-                            {{ replay.body }}</div>
-                        </p></li>
-                    <hr>
+                        <div class="row d-flex justify-content-sm-around">
+                            <div class="col-md-10">
+                                <div class="d-flex flex-column ms-2">
+                                    <h6 class="mb-1 text-primary fst-italic">{{ replay.user }}</h6>
+                                    <h6 class="mb-1 text-secondary text-black-50"><i> <small>{{ replay.create_data}}</small></i></h6>
+                                    <small class="fst-normal">{{ replay.body }}</small>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
                     {% endfor %} 
+                    </div>
                 </div>
-            </div>
             {% endfor %}
-        </ul>
-        {% if request.user.is_authenticated %}
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-                <p>Додати коментар</p>
-                <div class="col-6">
+        </div>
+    </div>
+        
+    <div class="container px-4 px-lg-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10">
+            {% if request.user.is_authenticated %}
+                    <p>Додати коментар</p>
                     <form action="{% url 'add_review' detail_post.id %}" id="add_form" method="post">
                         {% csrf_token %}
                         <input type="hidden" maxlength="4" name="parent" id="contactparent" value="">
-                        <textarea class="form-control border" rows="5" maxlength="150" name="body" id="contactcomment"
-                                  required=""></textarea>
+                        <textarea class="form-control border" rows="5" maxlength="450" minlength="20" class="col-md-10" name="body" id="contactcomment" required=""></textarea>
                     </form>
-                    <button form="add_form" type="submit" class="btn btn-primary">Додати</button>
-                </div>
-            
-            </div>
-        </div>
-        {% else %}
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-
-                <button form="add_form" type="submit" class="btn btn-primary">
+                    <p><button form="add_form" type="submit" class="btn btn-primary">Додати</button></p>
+            {% else %}
+                <button form="{{forms}}" type="submit" class="btn btn-primary">
                     <a href="{% url 'login' %}">Авторизуйтесь</a>
                 </button>
-                <i>щоб можна було залишати коментарі</i>
-                <div class="col-6">
-                </div>
-            </div>
+                щоб можна було залишати коментарі
             {% endif %}
-
+            </div>
+        </div>
+    </div>
 </article>
 <script>
             function js_rep(user, id) {

@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.db.models.fields import mixins
 from django.http import HttpResponseRedirect
+from django.http.response import Http404
 from django.template.loader import get_template, render_to_string
 from django.urls import reverse_lazy
 from django.core.mail import EmailMultiAlternatives, send_mail
@@ -60,20 +62,21 @@ class NewsDetailView(FormMixin, DetailView):
         return reverse_lazy('news-detail', kwargs={'pk': self.get_object().id})
 
     def post(self, request, *arg, **kwargs):
-        forms = CommentForm(request.POST)
-        if forms.is_valid():
-            self.object = forms.save(commit=False)
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+        print(form)
+        if form.is_valid():
+            self.object = form.save(commit=False)
             self.object.post = self.get_object()
             self.object.user = self.request.user
             self.object.save()
-            forms = forms.save(commit=False)
+            forms = form.save(commit=False)
             if request.POST.get('parent', None):
                 forms.parent_id = int(request.POST.get('parent'))
-                print(forms.parent_id)
                 forms.save()
             return self.form_valid(forms)
         else:
-            return self.form_invalid(forms)
+            return self.form_invalid(form)
 
 
 class AuthUserView(View):
@@ -160,7 +163,6 @@ class SearchPost(ListView):
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64).decode())
-        print(uid)
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
