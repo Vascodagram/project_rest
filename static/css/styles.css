@@ -4450,7 +4450,6 @@ textarea.form-control-lg {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
 }
 .card > hr {
   margin-right: 0;
@@ -4609,7 +4608,6 @@ textarea.form-control-lg {
 
 .accordion-item {
   background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.125);
 }
 .accordion-item:not(:first-of-type) {
   border-top: 0;
@@ -4921,7 +4919,6 @@ textarea.form-control-lg {
   padding: 0.5rem 1rem;
   color: #212529;
   background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.125);
 }
 .list-group-item.disabled, .list-group-item:disabled {
   color: #6c757d;
